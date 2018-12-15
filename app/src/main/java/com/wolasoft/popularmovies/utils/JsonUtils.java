@@ -10,11 +10,11 @@ import org.json.JSONObject;
 public class JsonUtils {
 
     private static final String TAG = JsonUtils.class.getSimpleName();
-    private static  final String ORIGINAL_TITLE_KEY = "original_title";
-    private static  final String THUMBNAIL_URL_KEY = "poster_path";
-    private static  final String RATING_KEY = "vote_average";
-    private static  final String SYNOPSIS_KEY = "overview";
-    private static  final String REALEASE_DATE_KEY = "release_date";
+    private static final String ORIGINAL_TITLE_KEY = "original_title";
+    private static final String THUMBNAIL_URL_KEY = "poster_path";
+    private static final String RATING_KEY = "vote_average";
+    private static final String SYNOPSIS_KEY = "overview";
+    private static final String RELEASE_DATE_KEY = "release_date";
 
     public static Movie parseMovieJson(String json) {
         Movie movie = null;
@@ -24,7 +24,7 @@ public class JsonUtils {
             String thumbnailUrl = movieObject.getString(THUMBNAIL_URL_KEY);
             float rating = (float) movieObject.getDouble(RATING_KEY);
             String synopsis = movieObject.getString(SYNOPSIS_KEY);
-            String releaseDate = movieObject.getString(REALEASE_DATE_KEY);
+            String releaseDate = movieObject.getString(RELEASE_DATE_KEY);
 
             movie = new Movie();
             movie.setOriginalTitle(originalTitle);
