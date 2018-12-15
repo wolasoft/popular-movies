@@ -13,7 +13,7 @@ public class Movie implements Parcelable {
 
     public Movie() {}
 
-    public Movie(Parcel parcel) {
+    private Movie(Parcel parcel) {
         this.originalTitle = parcel.readString();
         this.thumbnailUrl = parcel.readString();
         this.rating = parcel.readFloat();

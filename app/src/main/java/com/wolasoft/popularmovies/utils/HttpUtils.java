@@ -51,7 +51,7 @@ public class HttpUtils {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 InputStream inputStream = connection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-                StringBuffer responseBuffer = new StringBuffer();
+                StringBuilder responseBuffer = new StringBuilder();
                 String line;
 
                 while ((line = bufferedReader.readLine()) != null) {
