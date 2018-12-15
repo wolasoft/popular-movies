@@ -11,6 +11,8 @@ public class Movie implements Parcelable {
     private String synopsis;
     private String releaseDate;
 
+    public Movie() {}
+
     public Movie(Parcel parcel) {
         this.originalTitle = parcel.readString();
         this.thumbnailUrl = parcel.readString();
