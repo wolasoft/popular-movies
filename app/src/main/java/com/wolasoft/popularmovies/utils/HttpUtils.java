@@ -12,12 +12,13 @@ import java.net.URL;
 public class HttpUtils {
 
     private static final String TAG = HttpUtils.class.getSimpleName();
-    private static final String API_BASE_URI = "https://www.themoviedb.org/movie";
-    private static final String API_KEY = "";
+    private static final String API_BASE_URL = "http://api.themoviedb.org/3/movie";
+    public static final String API_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w185";
+    private static final String API_KEY = "invalid_key";
     private static final String API_KEY_PARAM = "api_key";
 
-    private URL buildMoviesUrl(String path) {
-        String customUrl = API_BASE_URI + "/" + path;
+    private static URL buildMoviesUrl(String path) {
+        String customUrl = API_BASE_URL + "/" + path;
         Uri moviesDbUrl = Uri.parse(customUrl).buildUpon()
                 .appendQueryParameter(API_KEY_PARAM, API_KEY)
                 .build();
@@ -33,8 +34,10 @@ public class HttpUtils {
         return url;
     }
 
-    public String requestApi(String path) {
+    public static String requestApi(String path) {
         URL builtUrl = buildMoviesUrl(path);
+
+        Log.d("REQUEST", builtUrl.toString());
 
         HttpURLConnection connection = null;
         String response = null;
@@ -58,9 +61,9 @@ public class HttpUtils {
                     responseBuffer.append(line);
                 }
 
+                response = responseBuffer.toString();
                 bufferedReader.close();
                 inputStream.close();
-                response = responseBuffer.toString();
             }
         } catch (Exception e) {
             e.printStackTrace();
