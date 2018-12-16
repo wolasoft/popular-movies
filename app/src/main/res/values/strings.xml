@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">PopularMovies</string>
+    <string name="app_name">Popular Movies</string>
+    <string name="error_message">Network error</string>
+    <string name="empty_list_message">No movie available</string>
+    <string name="action_most_popular">Most popular</string>
+    <string name="action_highest_rated">Top rated</string>
 </resources>
