@@ -5,9 +5,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class NetworkUtils {
+
     public static boolean isInternetAvailable(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        NetworkInfo networkInfo;
+
+        networkInfo = manager != null ? manager.getActiveNetworkInfo() : null;
 
         return networkInfo != null && networkInfo.isConnected();
     }

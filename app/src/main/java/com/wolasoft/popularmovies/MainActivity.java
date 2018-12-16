@@ -25,15 +25,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieClickedListener {
 
-    private final int NUMBER_OF_COLUMN = 2;
-    private final String MOST_POPULAR_MOVIES_PATH = "popular";
-    private final String TOP_RATED_MOVIES_PATH = "top_rated";
     private final String MOVIES_LIST = "movies_list";
 
     private TextView errorMessageTv;
     private TextView emptyListMessageTv;
     private ProgressBar progressBar;
-    private RecyclerView moviesListRv;
     private MovieAdapter adapter;
     private List<Movie> movieList = null;
 
@@ -42,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        moviesListRv = findViewById(R.id.movies_list_rv);
+        RecyclerView moviesListRv = findViewById(R.id.movies_list_rv);
         emptyListMessageTv = findViewById(R.id.empty_list_message_tv);
         errorMessageTv = findViewById(R.id.error_message_tv);
         progressBar = findViewById(R.id.progress_bar);
@@ -51,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         moviesListRv.setAdapter(adapter);
         moviesListRv.setHasFixedSize(true);
 
+        int NUMBER_OF_COLUMN = 2;
         GridLayoutManager layoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMN);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -61,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             adapter.setDataChanged(this.movieList);
         }
         else {
-            new HttpAsyncTask().execute(MOST_POPULAR_MOVIES_PATH);
+            showMostPopularMovies();
         }
     }
 
@@ -107,11 +104,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     }
 
     private void showMostPopularMovies() {
+        String MOST_POPULAR_MOVIES_PATH = "popular";
         new HttpAsyncTask().execute(MOST_POPULAR_MOVIES_PATH);
         setTitle(R.string.action_most_popular);
     }
 
     private void showHighestRatedMovies() {
+        String TOP_RATED_MOVIES_PATH = "top_rated";
         new HttpAsyncTask().execute(TOP_RATED_MOVIES_PATH);
         setTitle(R.string.action_highest_rated);
     }
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
         this.progressBar.setVisibility(View.GONE);
     }
 
-    class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {

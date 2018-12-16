@@ -28,7 +28,7 @@ public class JsonUtils {
         try {
             JSONObject moviesListObject = new JSONObject(json);
             JSONArray moviesArray = moviesListObject.getJSONArray(MOVIES_LIST_KEY);
-            moviesList = new ArrayList();
+            moviesList = new ArrayList<>();
 
             for (int i=0; i< moviesArray.length(); i++) {
                 String movieJson = moviesArray.get(i).toString();
