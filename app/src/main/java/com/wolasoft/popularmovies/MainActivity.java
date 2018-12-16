@@ -1,5 +1,6 @@
 package com.wolasoft.popularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -98,7 +99,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
 
     @Override
     public void movieClicked(Movie movie) {
+        Class movieDetailsActivityClass = MovieDetailsActivity.class;
 
+        Intent movieDetailsIntent = new Intent(MainActivity.this, movieDetailsActivityClass);
+        movieDetailsIntent.putExtra(MovieDetailsActivity.SELECTED_MOVIE, movie);
+        startActivity(movieDetailsIntent);
     }
 
     private void showMostPopularMovies() {

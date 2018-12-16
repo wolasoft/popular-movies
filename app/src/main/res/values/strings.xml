@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+    <string name="movie_details_activity_title">Movie details</string>
     <string name="error_message">Network error</string>
     <string name="empty_list_message">No movie available</string>
     <string name="action_most_popular">Most popular</string>
     <string name="action_highest_rated">Top rated</string>
+    <string name="movie_rating">%1$s/10</string>
+    <string name="movie_details_image_description">Movie image</string>
 </resources>
