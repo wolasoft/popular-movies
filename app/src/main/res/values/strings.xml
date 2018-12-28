@@ -7,4 +7,10 @@
     <string name="action_highest_rated">Top rated</string>
     <string name="movie_rating">%1$s/10</string>
     <string name="movie_details_image_description">Movie image</string>
+
+    <!-- Movie details-->
+    <string name="release_date_label">2018-10-03</string>
+    <string name="rating_label">6.3/10</string>
+    <string name="title_label">Aquaman</string>
+    <string name="synopsis_label">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
 </resources>

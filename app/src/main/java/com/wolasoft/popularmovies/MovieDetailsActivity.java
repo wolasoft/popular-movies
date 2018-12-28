@@ -29,10 +29,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_details);
 
         imageView = findViewById(R.id.image);
-        titleTv = findViewById(R.id.title_tv);
-        releaseDateTv = findViewById(R.id.release_date_tv);
-        ratingTv = findViewById(R.id.rating_tv);
-        synopsisTv = findViewById(R.id.synopsis_tv);
+        titleTv = findViewById(R.id.titleTV);
+        releaseDateTv = findViewById(R.id.releaseDateTV);
+        ratingTv = findViewById(R.id.ratingTV);
+        synopsisTv = findViewById(R.id.synopsisTV);
         Intent intent = getIntent();
 
         if(savedInstanceState != null) {
