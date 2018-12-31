@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:padding="@dimen/length_2"
+    android:background="@drawable/item_list_selector">
+
+    <ImageView
+        android:id="@+id/playImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:contentDescription="@string/video_play_button_description"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:src="@drawable/ic_play_arrow_black_24dp"
+        android:src="@drawable/ic_play_arrow_black_24dp"
+        />
+
+    <TextView
+        android:id="@+id/nameTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/playImage"
+        app:layout_constraintLeft_toRightOf="@id/playImage"
+        android:layout_marginStart="@dimen/length_4"
+        android:layout_marginLeft="@dimen/length_4"
+        tools:text="@string/trailer_label"
+        />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/length_2"
+    android:background="@drawable/item_list_selector">
+
+    <TextView
+        android:id="@+id/authorTV"
+        android:layout_width="@dimen/length_0"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        tools:text="@string/author_label"
+        />
+
+    <TextView
+        android:id="@+id/contentTV"
+        android:layout_width="@dimen/length_0"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/authorTV"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="@string/lorem_ipsum_label"
+        android:layout_marginTop="@dimen/length_2"
+        android:layout_marginBottom="@dimen/length_2"
+        />
+
+</android.support.constraint.ConstraintLayout>
