@@ -3,14 +3,26 @@
     <string name="movie_details_activity_title">Movie details</string>
     <string name="error_message">Network error</string>
     <string name="empty_list_message">No movie available</string>
-    <string name="action_most_popular">Most popular</string>
-    <string name="action_highest_rated">Top rated</string>
     <string name="movie_rating">%1$s/10</string>
     <string name="movie_details_image_description">Movie image</string>
+
+    <!-- Menu -->
+    <string name="action_most_popular">Most popular</string>
+    <string name="action_highest_rated">Top rated</string>
+    <string name="action_favorite">Favorite</string>
 
     <!-- Movie details-->
     <string name="release_date_label">2018-10-03</string>
     <string name="rating_label">6.3/10</string>
+    <string name="review_label">Reviews</string>
+    <string name="lorem_ipsum_label">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
     <string name="title_label">Aquaman</string>
-    <string name="synopsis_label">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="trailers_label">Trailers</string>
+    <string name="message_movie_saved">Movie saved</string>
+    <string name="message_movie_unsaved">Movie unsaved</string>
+
+    <!-- list view item -->
+    <string name="video_play_button_description">Play button</string>
+    <string name="trailer_label">Trailer 1</string>
+    <string name="author_label">Author name</string>
 </resources>
