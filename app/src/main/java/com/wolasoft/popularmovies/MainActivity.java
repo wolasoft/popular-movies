@@ -1,78 +1,143 @@
 package com.wolasoft.popularmovies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
+import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.wolasoft.popularmovies.adapters.MovieAdapter;
-import com.wolasoft.popularmovies.models.Movie;
-import com.wolasoft.popularmovies.utils.HttpUtils;
-import com.wolasoft.popularmovies.utils.JsonUtils;
+import com.wolasoft.popularmovies.data.models.Movie;
+import com.wolasoft.popularmovies.databinding.ActivityMainBinding;
 import com.wolasoft.popularmovies.utils.NetworkUtils;
+import com.wolasoft.popularmovies.viewmodels.MovieViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMovieClickedListener {
 
     private final String MOVIES_LIST = "movies_list";
+    private final String CURRENT_FILTER_TAG = "current_filter_tag";
+    private String DEFAULT_FILTER = MOVIES_LIST;
 
-    private TextView errorMessageTv;
-    private TextView emptyListMessageTv;
-    private ProgressBar progressBar;
+    private ActivityMainBinding mainBinding;
     private MovieAdapter adapter;
     private List<Movie> movieList = null;
 
+    private static final String MOST_POPULAR_MOVIES_PATH = "popular";
+    private static final String TOP_RATED_MOVIES_PATH = "top_rated";
+    private MovieViewModel movieViewModel;
+    private int orientation;
+    // private String currentFilter;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        orientation = getResources().getConfiguration().orientation;
+        initViews();
+        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
-        RecyclerView moviesListRv = findViewById(R.id.movies_list_rv);
-        emptyListMessageTv = findViewById(R.id.empty_list_message_tv);
-        errorMessageTv = findViewById(R.id.error_message_tv);
-        progressBar = findViewById(R.id.progress_bar);
-
-        adapter = new MovieAdapter(this.movieList, this);
-        moviesListRv.setAdapter(adapter);
-        moviesListRv.setHasFixedSize(true);
-
-        int NUMBER_OF_COLUMN = 2;
-        GridLayoutManager layoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMN);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        moviesListRv.setLayoutManager(layoutManager);
-
-        if (savedInstanceState != null) {
-            this.movieList = savedInstanceState.getParcelableArrayList(MOVIES_LIST);
-            adapter.setDataChanged(this.movieList);
+        if (savedInstanceState != null && savedInstanceState.containsKey(CURRENT_FILTER_TAG)) {
+            DEFAULT_FILTER = savedInstanceState.getString(CURRENT_FILTER_TAG);
+            if (DEFAULT_FILTER == null) {
+                showFavoriteMovies();
+            } else if (DEFAULT_FILTER.equals(MOST_POPULAR_MOVIES_PATH)) {
+                showMostPopularMovies();
+            } else if (DEFAULT_FILTER.equals(TOP_RATED_MOVIES_PATH)){
+                showHighestRatedMovies();
+            }
         }
         else {
             showMostPopularMovies();
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putParcelableArrayList(MOVIES_LIST, new ArrayList<>(this.movieList));
+    private void initViews() {
+
+        adapter = new MovieAdapter(this.movieList, this);
+        mainBinding.moviesListRV.setAdapter(adapter);
+        mainBinding.moviesListRV.setHasFixedSize(true);
+
+        int NUMBER_OF_COLUMN;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            NUMBER_OF_COLUMN = 2;
+        } else {
+            NUMBER_OF_COLUMN = 3;
+        }
+        GridLayoutManager layoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMN);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        mainBinding.moviesListRV.setLayoutManager(layoutManager);
+    }
+
+    private void setupViewModel(@Nullable String path) {
+        DEFAULT_FILTER = path;
+        adapter.setDataChanged(null);
+        hideErrorMessage();
+        showProgressBar();
+        mainBinding.emptyListMessageTV.setVisibility(View.GONE);
+
+        if (path == null) {
+            movieViewModel.getMoviesFromDb().observe(this, new Observer<List<Movie>>() {
+                @Override
+                public void onChanged(@Nullable List<Movie> movies) {
+                    updateUI(movies);
+                }
+            });
+        } else if (NetworkUtils.isInternetAvailable(this)) {
+            movieViewModel.init(path);
+            movieViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+                @Override
+                public void onChanged(@Nullable List<Movie> movies) {
+                    updateUI(movies);
+                }
+            });
+        }
+        else {
+            showErrorMessage();
+            hideProgressBar();
+        }
+    }
+
+    private void updateUI(@Nullable List<Movie> movies) {
+        movieList = movies;
+
+        if (movieList == null) {
+            showErrorMessage();
+        }
+        else if (movieList.size() <= 0){
+            mainBinding.emptyListMessageTV.setVisibility(View.VISIBLE);
+        }
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.setDataChanged(movieList);
+                hideProgressBar();
+            }
+        });
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState);
-        this.movieList = savedInstanceState.getParcelableArrayList(MOVIES_LIST);
-        adapter.setDataChanged(this.movieList);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(CURRENT_FILTER_TAG, DEFAULT_FILTER);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        DEFAULT_FILTER = savedInstanceState.getString(CURRENT_FILTER_TAG, MOST_POPULAR_MOVIES_PATH);
     }
 
     @Override
@@ -90,6 +155,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
             case R.id.action_highest_rated:
                 showHighestRatedMovies();
                 break;
+            case R.id.action_favorite_movies:
+                showFavoriteMovies();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -104,68 +172,35 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnMo
     }
 
     private void showMostPopularMovies() {
-        String MOST_POPULAR_MOVIES_PATH = "popular";
-        new HttpAsyncTask().execute(MOST_POPULAR_MOVIES_PATH);
+        setupViewModel(MOST_POPULAR_MOVIES_PATH);
         setTitle(R.string.action_most_popular);
     }
 
     private void showHighestRatedMovies() {
-        String TOP_RATED_MOVIES_PATH = "top_rated";
-        new HttpAsyncTask().execute(TOP_RATED_MOVIES_PATH);
+
+        setupViewModel(TOP_RATED_MOVIES_PATH);
         setTitle(R.string.action_highest_rated);
     }
 
+
+    private void showFavoriteMovies() {
+        setupViewModel(null);
+        setTitle(R.string.action_favorite);
+    }
+
     private void showErrorMessage() {
-        this.errorMessageTv.setVisibility(View.VISIBLE);
+        mainBinding.errorMessageTV.setVisibility(View.VISIBLE);
     }
 
     private void hideErrorMessage() {
-        this.errorMessageTv.setVisibility(View.GONE);
+        mainBinding.errorMessageTV.setVisibility(View.GONE);
     }
 
     private void showProgressBar() {
-        this.progressBar.setVisibility(View.VISIBLE);
+        mainBinding.progressBar.setVisibility(View.VISIBLE);
     }
 
     private void hideProgressBar() {
-        this.progressBar.setVisibility(View.GONE);
-    }
-
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            adapter.setDataChanged(null);
-            hideErrorMessage();
-            showProgressBar();
-            emptyListMessageTv.setVisibility(View.GONE);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            String path = params[0];
-            String response = null;
-            if (NetworkUtils.isInternetAvailable(MainActivity.this)) {
-                response = HttpUtils.requestApi(path);
-            }
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(String response) {
-            if (response != null) {
-                movieList = JsonUtils.parseMovieJson(response);
-            }
-
-            if (movieList == null) {
-                showErrorMessage();
-            }
-            else if (movieList.size() <= 0){
-                emptyListMessageTv.setVisibility(View.VISIBLE);
-            }
-
-            adapter.setDataChanged(movieList);
-            hideProgressBar();
-        }
+        mainBinding.progressBar.setVisibility(View.GONE);
     }
 }
