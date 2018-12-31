@@ -1,19 +1,51 @@
-package com.wolasoft.popularmovies.models;
+package com.wolasoft.popularmovies.data.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
+@Entity(tableName = "movies")
 public class Movie implements Parcelable {
 
+    @PrimaryKey
+    @SerializedName("id")
+    private int id;
+
+    @SerializedName("title")
     private String originalTitle;
+
+    @SerializedName("poster_path")
     private String thumbnailUrl;
+
+    @SerializedName("vote_average")
     private float rating;
+
+    @SerializedName("overview")
     private String synopsis;
+
+    @SerializedName("release_date")
+    @ColumnInfo(name = "overview")
     private String releaseDate;
 
+    @Ignore
     public Movie() {}
 
+    public Movie(int id, String originalTitle, String thumbnailUrl, float rating, String synopsis, String releaseDate) {
+        this.id = id;
+        this.originalTitle = originalTitle;
+        this.thumbnailUrl = thumbnailUrl;
+        this.rating = rating;
+        this.synopsis = synopsis;
+        this.releaseDate = releaseDate;
+    }
+
     private Movie(Parcel parcel) {
+        this.id = parcel.readInt();
         this.originalTitle = parcel.readString();
         this.thumbnailUrl = parcel.readString();
         this.rating = parcel.readFloat();
@@ -21,44 +53,28 @@ public class Movie implements Parcelable {
         this.releaseDate = parcel.readString();
     }
 
-    public String getOriginalTitle() {
-        return originalTitle;
+    public int getId() {
+        return id;
     }
 
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
+    public String getOriginalTitle() {
+        return originalTitle;
     }
 
     public String getThumbnailUrl() {
         return thumbnailUrl;
     }
 
-    public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
-    }
-
     public float getRating() {
         return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
     }
 
     public String getSynopsis() {
         return synopsis;
     }
 
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
-    }
-
     public String getReleaseDate() {
         return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
     }
 
     @Override
@@ -68,6 +84,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(originalTitle);
         dest.writeString(thumbnailUrl);
         dest.writeFloat(rating);

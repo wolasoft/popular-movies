@@ -10,8 +10,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.wolasoft.popularmovies.R;
-import com.wolasoft.popularmovies.models.Movie;
-import com.wolasoft.popularmovies.utils.HttpUtils;
+import com.wolasoft.popularmovies.data.models.Movie;
+import com.wolasoft.popularmovies.utils.Constants;
 
 import java.util.List;
 
@@ -64,7 +64,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         void bind(Movie movie) {
             Picasso.with(context)
-                    .load(HttpUtils.API_IMAGE_BASE_URL + movie.getThumbnailUrl())
+                    .load(Constants.API_IMAGE_BASE_URL + movie.getThumbnailUrl())
                     .into(imageView);
         }
 
